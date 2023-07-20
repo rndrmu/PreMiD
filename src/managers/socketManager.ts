@@ -1,12 +1,8 @@
-import { app, dialog } from "electron";
 import { createServer, Server } from "http";
 import socketIo from "socket.io";
 
-import { trayManager } from "../";
 import { error, success } from "../util/debug";
 import { clearActivity, getDiscordUser, rpcClients, setActivity } from "./discordManager";
-import { openFileDialog } from "./presenceDevManager";
-import { update as updateSettings } from "./settingsManager";
 
 export let io: socketIo.Server;
 export let socket: socketIo.Socket;
@@ -56,21 +52,18 @@ function socketConnection(cSocket: socketIo.Socket) {
 		.catch(_ => socket.emit("discordUser", null));
 	socket.on("setActivity", setActivity);
 	socket.on("clearActivity", clearActivity);
-	socket.on("settingUpdate", updateSettings);
-	socket.on("selectLocalPresence", openFileDialog);
+	//socket.on("selectLocalPresence", openFileDialog);
 	socket.on("getVersion", () =>
-		socket.emit("receiveVersion", app.getVersion().replace(/[\D]/g, ""))
+		socket.emit("receiveVersion", "220")
 	);
 	socket.once("disconnect", () => {
 		connected = false;
-		trayManager.update();
 		//* Show debug
 		//* Destroy all open RPC connections
 		error("Socket disconnection.");
 		rpcClients.forEach(c => c.destroy());
 	});
 	connected = true;
-	trayManager.update();
 }
 
 //* Runs on socket errors
@@ -82,11 +75,6 @@ function socketError(e: any) {
 		//* Focus app
 		//* Show error dialog
 		//* Exit app afterwards
-		app.focus();
-		dialog.showErrorBox(
-			"Oh noes! Port error...",
-			`${app.name} could not bind to port ${e.port}.\nIs ${app.name} running already?`
-		);
-		app.quit();
+		process.exit(1);
 	}
 }

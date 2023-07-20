@@ -1,5 +1,4 @@
 import { readdirSync, readFileSync, unwatchFile } from "fs";
-import { dialog, app } from "electron";
 import { socket } from "./socketManager";
 import { extname } from "path";
 import { info } from "../util/debug";
@@ -52,7 +51,7 @@ async function readFiles(files, path) {
 		)
 	});
 }
-
+/* 
 export async function openFileDialog() {
 	//* Open file dialog
 	//* If user cancels
@@ -80,3 +79,4 @@ export async function openFileDialog() {
 
 	watchDir(oDialog.filePaths[0]);
 }
+ */

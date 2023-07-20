@@ -1,7 +1,5 @@
 import { Client } from "discord-rpc";
-import { app } from "electron";
 
-import { trayManager } from "../";
 //* Import custom types
 import PresenceData from "../../@types/PreMiD/PresenceData";
 import { info } from "../util/debug";
@@ -45,8 +43,6 @@ class RPCClient {
 
 		if (!this.clientReady || !presenceData) return;
 
-		if (presenceData.trayTitle)
-			trayManager.tray.setTitle(presenceData.trayTitle);
 
 		this.client
 			.setActivity(presenceData.presenceData)
@@ -60,7 +56,6 @@ class RPCClient {
 		if (!this.clientReady) return;
 
 		this.client.clearActivity().catch(() => this.destroy());
-		trayManager.tray.setTitle("");
 	}
 
 	async destroy() {
@@ -71,7 +66,6 @@ class RPCClient {
 				this.client.destroy();
 			}
 
-			trayManager.tray.setTitle("");
 			rpcClients = rpcClients.filter(
 				client => client.clientId !== this.clientId
 			);
@@ -117,7 +111,8 @@ export async function getDiscordUser() {
 	});
 }
 
-app.once(
+/* app.once(
 	"will-quit",
 	async () => await Promise.all(rpcClients.map(c => c.destroy()))
 );
+ */
