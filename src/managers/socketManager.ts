@@ -3,6 +3,7 @@ import socketIo from "socket.io";
 
 import { error, success } from "../util/debug";
 import { clearActivity, getDiscordUser, rpcClients, setActivity } from "./discordManager";
+import { openFileDialog } from "./presenceDevManager";
 
 export let io: socketIo.Server;
 export let socket: socketIo.Socket;
@@ -52,7 +53,7 @@ function socketConnection(cSocket: socketIo.Socket) {
 		.catch(_ => socket.emit("discordUser", null));
 	socket.on("setActivity", setActivity);
 	socket.on("clearActivity", clearActivity);
-	//socket.on("selectLocalPresence", openFileDialog);
+	socket.on("selectLocalPresence", openFileDialog);
 	socket.on("getVersion", () =>
 		socket.emit("receiveVersion", "220")
 	);
@@ -74,6 +75,7 @@ function socketError(e: any) {
 	if (e.code === "EADDRINUSE") {
 		//* Focus app
 		//* Show error dialog
+		error("Port 3020 is already in use.");
 		//* Exit app afterwards
 		process.exit(1);
 	}

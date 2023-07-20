@@ -1,7 +1,7 @@
 import { readdirSync, readFileSync, unwatchFile } from "fs";
 import { socket } from "./socketManager";
 import { extname } from "path";
-import { info } from "../util/debug";
+import dialog from "node-file-dialog";
 
 import chokidar from "chokidar";
 
@@ -10,6 +10,7 @@ let presenceDevWatchedFiles = [],
 	currWatcher: chokidar.FSWatcher = null;
 
 export async function watchDir(path: string) {
+	console.log("watchDir", path);
 	currWatchPath = path + "/";
 	let files = readdirSync(path);
 
@@ -51,32 +52,24 @@ async function readFiles(files, path) {
 		)
 	});
 }
-/* 
+
 export async function openFileDialog() {
 	//* Open file dialog
 	//* If user cancels
 	//* Unwatch all still watched files
 	//* Watch directory
-	app.focus();
-	let oDialog = await dialog.showOpenDialog(null, {
-		title: "Select Presence Folder",
-		message:
-			"Please select the folder that contains the presence you want to load.\n(metadata.json, presence.js, iframe.js)",
-		buttonLabel: "Load Presence",
-		properties: ["openDirectory"]
-	});
-	if (oDialog.canceled) {
-		//* Show debug
-		//* return
-		info("Presence load canceled.");
-		return;
-	}
-	info(`Watching ${oDialog.filePaths[0]}`);
-	if (presenceDevWatchedFiles.length > 0)
-		await Promise.all(
-			presenceDevWatchedFiles.map(f => unwatchFile(currWatchPath + f))
-		);
+	try {
+		let oDialog = await dialog({ type: "directory" });
+		watchDir(oDialog[0]);
 
-	watchDir(oDialog.filePaths[0]);
+
+	} catch (e) {
+		if (presenceDevWatchedFiles.length > 0)
+			await Promise.all(
+				presenceDevWatchedFiles.map(f => unwatchFile(currWatchPath + f))
+			);
+	}
+
+
+
 }
- */

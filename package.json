@@ -40,6 +40,7 @@
 		"axios": "0.21.1",
 		"chokidar": "3.5.1",
 		"discord-rpc": "github:discordjs/RPC",
+		"node-file-dialog": "^1.0.3",
 		"socket.io": "3.1.2",
 		"source-map-support": "^0.5.19"
 	},

@@ -93,10 +93,12 @@ export function setActivity(presence: PresenceData) {
 export function clearActivity(clientId: string = undefined) {
 	info("clearActivity");
 
-	if (clientId) {
+	/* if (clientId) {
 		let client = rpcClients.find(c => c.clientId === clientId);
 		client.clearActivity();
-	} else rpcClients.forEach(c => c.clearActivity());
+	} else  */
+	
+	rpcClients.forEach(c => c.clearActivity());
 }
 
 export async function getDiscordUser() {
@@ -111,8 +113,3 @@ export async function getDiscordUser() {
 	});
 }
 
-/* app.once(
-	"will-quit",
-	async () => await Promise.all(rpcClients.map(c => c.destroy()))
-);
- */
